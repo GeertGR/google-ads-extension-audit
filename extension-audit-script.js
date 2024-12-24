@@ -483,8 +483,11 @@ function auditExtensions() {
     });
   
     // Loop through all campaigns
+    var today = Utilities.formatDate(new Date(), AdsApp.currentAccount().getTimeZone(), 'yyyy-MM-dd');
     var campaignIterator = AdsApp.campaigns()
       .withCondition('Status = ENABLED')
+      .withCondition(`EndDate >= '${today}'`)
+      .withCondition('CampaignExperimentType = BASE')
       .get();
   
     while (campaignIterator.hasNext()) {
@@ -1479,4 +1482,11 @@ function generateActionPlan(results) {
             </ul>
         </div>
     `;
+}
+
+function formatDate(date) {
+    var year = date.getFullYear();
+    var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    var day = date.getDate().toString().padStart(2, '0');
+    return `${year}${month}${day}`;
 }
