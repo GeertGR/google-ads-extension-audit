@@ -217,12 +217,25 @@ var extensionTypes = [
                 direct: {
                     name: "Direct Store Locations",
                     description: "For businesses that own their store locations directly",
-                    source: "Google Business Profile or Chain stores"
+                    source: "Google Business Profile or Chain stores",
+                    examples: [
+                        "Store address display in ads",
+                        "Distance to location",
+                        "Clickable 'Call' button",
+                        "Store details page with hours, phone, photos",
+                        "Integration with Performance Max campaigns"
+                    ]
                 },
                 affiliate: {
                     name: "Affiliate Store Locations",
                     description: "For manufacturers/sellers who sell through stores they don't own",
-                    source: "Chain stores (General retailers/Auto dealers) or Global Location Groups"
+                    source: "Chain stores (General retailers/Auto dealers) or Global Location Groups",
+                    examples: [
+                        "Show nearest retailers carrying products",
+                        "Map integration for store locations",
+                        "Mobile directions to stores",
+                        "Store finder functionality"
+                    ]
                 }
             },
             display: {
@@ -232,10 +245,11 @@ var extensionTypes = [
                         "Address information",
                         "Distance to store",
                         "Clickable 'Call' button on mobile",
-                        "Map integration"
+                        "Map integration",
+                        "Store hours and details page"
                     ]
                 },
-                maps: "Can appear beside, above, or below search results on Google Maps",
+                maps: "Can appear beside, above, or below search results on Google Maps and Maps app",
                 display: "Shows when people are near or interested in your local area",
                 youtube: "Shows on TrueView in-stream and bumper ads for nearby users"
             },
@@ -243,13 +257,25 @@ var extensionTypes = [
                 "Automatic closure handling with Business Profile integration",
                 "Can be assigned to specific campaigns or ad groups via location groups",
                 "Shows store hours and directions",
-                "Integrates with Performance Max campaigns"
+                "Integrates with Performance Max campaigns",
+                "Phone number verification required",
+                "Optional call reporting available"
             ],
             bestPractices: [
                 "Choose appropriate location asset type (direct or affiliate)",
                 "Keep Business Profile information up to date",
                 "Use location groups for targeted campaign assignment",
-                "Ensure all locations are verified through integrity process"
+                "Enable call reporting for tracking",
+                "Verify all phone numbers",
+                "Ensure all locations are verified through integrity process",
+                "Monitor temporary/permanent closure status in Business Profile"
+            ],
+            restrictions: [
+                "Can only choose one type of location asset per account",
+                "Phone numbers must be verified",
+                "Locations must pass integrity verification",
+                "Closed locations won't show in ads",
+                "Must have valid Business Profile or Chain store data"
             ]
         }
     },
@@ -753,135 +779,181 @@ function generateExtensionReport(results, extensionTypes) {
 
                 <tr>
                   <td>Location Extension</td>
-                            <td>${results.summary.locations}</td>
+                  <td>${results.summary.locations}</td>
                   <td>1+</td>
-                            <td class="status-cell">${results.summary.locations >= 1 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
+                  <td class="status-cell">${results.summary.locations >= 1 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
                 </tr>
-                        <tr>
-                            <td>Promotion Extension</td>
-                            <td>${results.summary.promotions}</td>
-                            <td>1+</td>
-                            <td class="status-cell">${results.summary.promotions >= 1 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
-                        </tr>
                 <tr class="details-row">
                   <td colspan="4">
-                                <p><strong>Promotion Extension Details:</strong></p>
-                                <ul>
-                                    <li>Display Format:
-                                        <ul>
-                                            <li>Desktop: Shows below your ad text</li>
-                                            <li>Mobile: Shows below your ad text</li>
+                    <p><strong>Location Extension Details:</strong></p>
+                    <div class="location-details">
+                      <h4>Types of Location Assets</h4>
+                      <div class="location-types">
+                        <div class="location-type">
+                          <h4>Direct Store Locations</h4>
+                          <p>${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.direct.description}</p>
+                          <p><strong>Source:</strong> ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.direct.source}</p>
+                          <ul>
+                            ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.direct.examples.map(ex => `<li>${ex}</li>`).join('')}
+                          </ul>
+                        </div>
+                        <div class="location-type">
+                          <h4>Affiliate Store Locations</h4>
+                          <p>${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.affiliate.description}</p>
+                          <p><strong>Source:</strong> ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.affiliate.source}</p>
+                          <ul>
+                            ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.types.affiliate.examples.map(ex => `<li>${ex}</li>`).join('')}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <h4>Display Format</h4>
+                      <ul>
+                        <li>Search:
+                          <ul>
+                            <li>${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.display.search.description}</li>
+                            ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.display.search.features.map(feature => `<li>${feature}</li>`).join('')}
                           </ul>
                         </li>
-                                    <li>Key Features:
-                                        <ul>
-                                            <li>Can highlight sales and special offers</li>
-                                            <li>Can specify monetary or percentage discounts</li>
-                                            <li>Can set promotion periods</li>
-                                            <li>Can add occasion labels (e.g., Black Friday, Christmas)</li>
+                        <li>Maps: ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.display.maps}</li>
+                        <li>Display Network: ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.display.display}</li>
+                        <li>YouTube: ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.display.youtube}</li>
                       </ul>
-                                    </li>
-                                    <li>Best Practices:
-                                        <ul>
-                                            <li>Keep promotions up-to-date with current offers</li>
-                                            <li>Use specific dates for time-sensitive promotions</li>
-                                            <li>Include clear discount values or percentages</li>
-                                            <li>Add promo codes when applicable</li>
-                                            <li>Ensure landing pages match promotion details</li>
-                      </ul>
-                                    </li>
-                                    <li>Restrictions:
-                                        <ul>
-                                            <li>Must comply with promotion policy</li>
-                                            <li>Cannot use for time-sensitive flash sales</li>
-                                            <li>Must have accurate discount information</li>
-                                            <li>Landing page must clearly show promotion details</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                ${results.summary.promotions >= 1 ? '<p class="success-text">✓ Promotion extensions are set up. Keep them updated with current offers.</p>' : '<p class="warning-text">⚠️ Consider adding promotion extensions to highlight special offers and discounts.</p>'}
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td>Image Extension</td>
-                            <td>Campaign Level Only</td>
-                            <td>4+ per campaign</td>
-                            <td class="status-cell">${results.summary.images >= 4 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
-                        </tr>
-                        <tr class="details-row">
-                            <td colspan="4">
-                                <p><strong>Image Extension Details:</strong></p>
-                                <ul>
-                                    <li>Account Eligibility:
-                                        <ul>
-                                            ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.accountEligibility.map(req => `<li>${req}</li>`).join('')}
+                      <h4>Key Features</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.features.map(feature => `<li>${feature}</li>`).join('')}
                       </ul>
-                                    </li>
-                                    <li>Display Format:
-                                        <ul>
-                                            <li>Mobile:
-                                                <ul>
-                                                    ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.display.mobile.map(format => `<li>${format}</li>`).join('')}
-                                                </ul>
-                                            </li>
-                                            <li>Desktop:
-                                                <ul>
-                                                    ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.display.desktop.map(format => `<li>${format}</li>`).join('')}
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li>Image Specifications:
-                                        <ul>
-                                            <li>Required: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.required}</li>
-                                            <li>Recommended: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommended}</li>
-                                            <li>Minimum Resolution:
-                                                <ul>
-                                                    <li>Square: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.minResolution.square}</li>
-                                                    <li>Landscape: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.minResolution.landscape}</li>
-                                                </ul>
-                                            </li>
-                                            <li>Recommended Resolution:
-                                                <ul>
-                                                    <li>Square: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommendedResolution.square}</li>
-                                                    <li>Landscape: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommendedResolution.landscape}</li>
-                                                </ul>
-                                            </li>
-                                            <li>Format: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.format}</li>
-                                            <li>Max File Size: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.maxFileSize}</li>
-                                            <li>Safe Area: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.safeArea}</li>
-                                        </ul>
-                                    </li>
-                                    <li>Best Practices:
-                                        <ul>
-                                            ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.bestPractices.map(practice => `<li>${practice}</li>`).join('')}
-                                        </ul>
-                                    </li>
-                                    <li>Restrictions:
-                                        <ul>
-                                            ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.restrictions.map(restriction => `<li>${restriction}</li>`).join('')}
-                                        </ul>
-                                    </li>
-                                </ul>
-                                ${(() => {
-                                    // Check if any campaigns have image extensions
-                                    const campaignsWithImages = Object.values(results.campaignSummary).filter(campaign => campaign.images > 0);
-                                    if (campaignsWithImages.length === 0) {
-                                        return '<p class="warning-text">⚠️ Consider adding image extensions to make your ads more visually appealing.</p>';
-                                    } else {
-                                        const totalImages = Object.values(results.campaignSummary).reduce((sum, campaign) => sum + campaign.images, 0);
-                                        const campaignsNeedingMore = Object.entries(results.campaignSummary)
-                                            .filter(([_, data]) => data.images > 0 && data.images < 4)
-                                            .map(([name, _]) => name);
-                                        
-                                        if (campaignsNeedingMore.length > 0) {
-                                            return `<p class="info-text">ℹ️ You have ${totalImages} image extensions across ${campaignsWithImages.length} campaigns. Consider adding more images to: ${campaignsNeedingMore.join(', ')}</p>`;
-                                        } else {
-                                            return `<p class="success-text">✓ Image extensions are well configured across ${campaignsWithImages.length} campaigns with a total of ${totalImages} images.</p>`;
-                                        }
-                                    }
-                                })()}
+
+                      <h4>Best Practices</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.bestPractices.map(practice => `<li>${practice}</li>`).join('')}
+                      </ul>
+
+                      <h4>Restrictions</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'LOCATION').requirements.restrictions.map(restriction => `<li>${restriction}</li>`).join('')}
+                      </ul>
+                    </div>
+                    ${results.summary.locations >= 1 ? 
+                      '<p class="success-text">✓ Location extensions are set up. Keep your Business Profile or Chain store data up to date.</p>' : 
+                      '<p class="warning-text">⚠️ Consider adding location extensions to help customers find your business or products.</p>'}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Promotion Extension</td>
+                  <td>${results.summary.promotions}</td>
+                  <td>1+</td>
+                  <td class="status-cell">${results.summary.promotions >= 1 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
+                </tr>
+                <tr class="details-row">
+                  <td colspan="4">
+                    <p><strong>Promotion Extension Details:</strong></p>
+                    <div class="promotion-details">
+                      <h4>Display Format</h4>
+                      <ul>
+                        <li>Desktop: Shows below your ad text</li>
+                        <li>Mobile: Shows below your ad text</li>
+                      </ul>
+
+                      <h4>Key Features</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'PROMOTION').requirements.features.map(feature => `<li>${feature}</li>`).join('')}
+                      </ul>
+
+                      <h4>Best Practices</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'PROMOTION').requirements.bestPractices.map(practice => `<li>${practice}</li>`).join('')}
+                      </ul>
+
+                      <h4>Restrictions</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'PROMOTION').requirements.restrictions.map(restriction => `<li>${restriction}</li>`).join('')}
+                      </ul>
+                    </div>
+                    ${results.summary.promotions >= 1 ? '<p class="success-text">✓ Promotion extensions are set up. Keep them updated with current offers.</p>' : '<p class="warning-text">⚠️ Consider adding promotion extensions to highlight special offers and discounts.</p>'}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Image Extension</td>
+                  <td>Campaign Level Only</td>
+                  <td>4+ per campaign</td>
+                  <td class="status-cell">${results.summary.images >= 4 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
+                </tr>
+                <tr class="details-row">
+                  <td colspan="4">
+                    <p><strong>Image Extension Details:</strong></p>
+                    <div class="image-details">
+                      <h4>Account Eligibility</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.accountEligibility.map(req => `<li>${req}</li>`).join('')}
+                      </ul>
+
+                      <h4>Display Format</h4>
+                      <ul>
+                        <li>Mobile:
+                          <ul>
+                            ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.display.mobile.map(format => `<li>${format}</li>`).join('')}
+                          </ul>
+                        </li>
+                        <li>Desktop:
+                          <ul>
+                            ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.display.desktop.map(format => `<li>${format}</li>`).join('')}
+                          </ul>
+                        </li>
+                      </ul>
+
+                      <h4>Image Specifications</h4>
+                      <ul>
+                        <li>Required: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.required}</li>
+                        <li>Recommended: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommended}</li>
+                        <li>Minimum Resolution:
+                          <ul>
+                            <li>Square: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.minResolution.square}</li>
+                            <li>Landscape: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.minResolution.landscape}</li>
+                          </ul>
+                        </li>
+                        <li>Recommended Resolution:
+                          <ul>
+                            <li>Square: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommendedResolution.square}</li>
+                            <li>Landscape: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.recommendedResolution.landscape}</li>
+                          </ul>
+                        </li>
+                        <li>Format: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.format}</li>
+                        <li>Max File Size: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.maxFileSize}</li>
+                        <li>Safe Area: ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.specifications.safeArea}</li>
+                      </ul>
+
+                      <h4>Best Practices</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.bestPractices.map(practice => `<li>${practice}</li>`).join('')}
+                      </ul>
+
+                      <h4>Restrictions</h4>
+                      <ul>
+                        ${extensionTypes.find(ext => ext.type === 'IMAGE').requirements.restrictions.map(restriction => `<li>${restriction}</li>`).join('')}
+                      </ul>
+                    </div>
+                    ${(() => {
+                      // Check if any campaigns have image extensions
+                      const campaignsWithImages = Object.values(results.campaignSummary).filter(campaign => campaign.images > 0);
+                      if (campaignsWithImages.length === 0) {
+                        return '<p class="warning-text">⚠️ Consider adding image extensions to make your ads more visually appealing.</p>';
+                      } else {
+                        const totalImages = Object.values(results.campaignSummary).reduce((sum, campaign) => sum + campaign.images, 0);
+                        const campaignsNeedingMore = Object.entries(results.campaignSummary)
+                          .filter(([_, data]) => data.images > 0 && data.images < 4)
+                          .map(([name, _]) => name);
+                        
+                        if (campaignsNeedingMore.length > 0) {
+                          return `<p class="info-text">ℹ️ You have ${totalImages} image extensions across ${campaignsWithImages.length} campaigns. Consider adding more images to: ${campaignsNeedingMore.join(', ')}</p>`;
+                        } else {
+                          return `<p class="success-text">✓ Image extensions are well configured across ${campaignsWithImages.length} campaigns with a total of ${totalImages} images.</p>`;
+                        }
+                      }
+                    })()}
                   </td>
                 </tr>
               </table>
@@ -945,7 +1017,7 @@ function generateCampaignExtensionSummary(results) {
                         <td>${results.summary.accountLevel.promotions}</td>
                         <td>${data.promotions}</td>
                         <td class="status-cell">${data.promotions >= 1 ? '<span class="status-success">✓</span>' : '<span class="status-warning">⚠️</span>'}</td>
-                </tr>
+                    </tr>
                     <tr>
                         <td>Image Extension</td>
                         <td>N/A</td>
